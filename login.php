@@ -1,50 +1,31 @@
 <?php
 require 'config.php';
 
-if(isset($_SESSION['admin'])){
+session_start();
+
+if(isset($_SESSION['Administração'])){
     header('Location: dashboard.php');
     exit;
 }
 
-$error = '';
+$Erro = '';
 
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
-    $user = $_POST['username'];
-    $pass = $_POST['password'];
+    $Usuario = $_POST['Nome de usuário'];
+    $Passe = $_POST['senha'];
 
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE username=?");
-    $stmt->execute([$user]);
+    $STMT = $PDO->prepare("SELECT * FROM users WHERE username=?");
+    $STMT->execute([$Usuario]);
 
-    $data = $stmt->fetch(PDO::FETCH_ASSOC);
+    $Dados = $STMT->fetch(PDO::FETCH_ASSOC);
 
-    if($data && password_verify($pass, $data['password'])){
-        $_SESSION['admin'] = true;
+    if($Dados && password_verify($Passe, $Dados['senha'])){
+        $_SESSION['Administração'] = true;
         header('Location: dashboard.php');
         exit;
     }
 
-    $error = 'Login inválido';
+    $Erro = 'Login inválido';
 }
 ?>
-<html>
-<head>
-<title>Login</title>
-<link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-<div class="box">
-<h2>Login</h2>
-
-<form method="POST">
-<input type="text" name="username" placeholder="Usuário">
-<input type="password" name="password" placeholder="Senha">
-<button>Entrar</button>
-</form>
-
-<p><?= $error ?></p>
-</div>
-
-</body>
-</html>
