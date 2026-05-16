@@ -1,4 +1,3 @@
 <?php
-header("Location: login.php");
-exit;
+echo "SITE ONLINE OK";
 ?>
